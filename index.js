@@ -1,5 +1,5 @@
 // Set up your variable n here.
-const n = 9;
+const n = 8;
 // Some global variables for solve()
 let solutions = [];
 let numberOfSolutions = 0;
@@ -18,20 +18,23 @@ Given an nxn chessboard, output the number of possible ways to put n queens on t
 
 Algorithm: Backtracking
 For any square we are on,
+    if there are more than n queens already:
+        this is invalid, stop.
     if we are on the last square:
         check if there are indeed n queens on the board. If there is, output.
     if we overflowed the column: 
         go to the next row
     choose not to place a queen:
-        solve for the rest of the board.
+        go to the next col, solve for the rest of the board.
     place a queen:
         if this placement is valid:
-            solve for the rest of the board.
+            go down 1 row, solve for the rest of the board.
         if this placement is invalid:
             don't place a queen here and move on to the next square
 */
 
 function solve(grid, row, col, numberOfQueens) {
+    if (numberOfQueens > n) return false;
     if (row == n) {
         if (numberOfQueens == n) {
             solutions.push(grid);
@@ -45,7 +48,7 @@ function solve(grid, row, col, numberOfQueens) {
     solve(grid, row, col + 1, numberOfQueens);
     grid = deepClone(currentGrid);
     grid[row][col] = 'Q';
-    if (isValid(grid, row, col)) solve(grid, row, col + 1, numberOfQueens + 1);
+    if (isValid(grid, row, col)) solve(grid, row + 1, 0, numberOfQueens + 1);
 }
 
 function getEmptyGrid(n) {
